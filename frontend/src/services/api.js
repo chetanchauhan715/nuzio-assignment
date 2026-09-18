@@ -49,3 +49,21 @@ export const getPersonalizedNews = async (interests) => {
 
   return response.json()
 }
+
+export const loginWithGoogle = async (credential) => {
+  const response = await fetch(`${API_URL}/auth/google`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      credential,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error('Google login failed')
+  }
+
+  return response.json()
+}

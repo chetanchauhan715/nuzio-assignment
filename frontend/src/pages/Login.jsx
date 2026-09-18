@@ -1,10 +1,28 @@
-import './Login.css'
+import { GoogleLogin } from '@react-oauth/google'
 import { useNavigate } from 'react-router-dom'
+import { loginWithGoogle } from '../services/api'
+import './Login.css'
 
 function Login() {
+  const navigate = useNavigate()
 
-    const navigate = useNavigate()
-    
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const response = await loginWithGoogle(
+        credentialResponse.credential
+      )
+
+      localStorage.setItem(
+        'nuzioUser',
+        JSON.stringify(response.data.user)
+      )
+
+      navigate('/profession')
+    } catch (error) {
+      console.error('Google login failed:', error)
+    }
+  }
+
   return (
     <section className="login-page">
       <div className="login-brand">
@@ -22,18 +40,17 @@ function Login() {
         </p>
       </div>
 
-      {/* <button className="google-btn">
-        <span className="google-icon">G</span>
-        Continue with Google
-      </button> */}
-
-      <button
-  className="google-btn"
-  onClick={() => navigate('/profession')}
->
-  <span className="google-icon">G</span>
-  Continue with Google
-</button>
+      <div className="google-login-wrapper">
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={() => {
+            console.error('Google login failed')
+          }}
+          theme="filled_black"
+          shape="pill"
+          text="continue_with"
+        />
+      </div>
 
       <p className="login-terms">
         By continuing you agree to our Terms & Privacy Policy
