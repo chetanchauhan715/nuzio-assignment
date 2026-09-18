@@ -1,0 +1,22 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #09090b;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  width: 100%;
+  max-width: 390px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background: #0b0b0d;
+}
