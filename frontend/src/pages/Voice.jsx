@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useOnboarding } from '../context/OnboardingContext'
+import { savePreferences } from '../services/api'
 import './Voice.css'
 
 const voices = [
@@ -29,11 +30,28 @@ function Voice() {
   const navigate = useNavigate()
 
   const {
+    profession,
+    interests,
     voice: selectedVoice,
     setVoice: setSelectedVoice,
     briefLength,
     setBriefLength,
   } = useOnboarding()
+
+  const handleStartBrief = async () => {
+    try {
+      await savePreferences({
+        profession,
+        interests,
+        voice: selectedVoice,
+        briefLength,
+      })
+
+      navigate('/news')
+    } catch (error) {
+      console.error('Failed to save preferences:', error)
+    }
+  }
 
   return (
     <section className="voice-page">
@@ -120,7 +138,7 @@ function Voice() {
 
       <button
         className="continue-btn"
-        onClick={() => navigate('/news')}
+        onClick={handleStartBrief}
       >
         Start my brief →
       </button>

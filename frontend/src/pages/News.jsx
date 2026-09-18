@@ -1,57 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useOnboarding } from '../context/OnboardingContext'
+import { getPersonalizedNews } from '../services/api'
 import './News.css'
-
-const newsStories = [
-  {
-    id: 1,
-    category: 'AI & Technology',
-    title: 'AI adoption grows across Indian businesses',
-    summary:
-      'Indian companies are increasing their use of artificial intelligence for customer support, automation, analytics, and internal productivity tools.',
-    source: 'Nuzio Brief',
-  },
-  {
-    id: 2,
-    category: 'Startups',
-    title: 'Indian startups focus more on sustainable growth',
-    summary:
-      'Startup founders are increasingly prioritising profitability, efficient operations, and long-term business models instead of growth at any cost.',
-    source: 'Nuzio Brief',
-  },
-  {
-    id: 3,
-    category: 'Indian Business',
-    title: 'Digital services continue to expand across India',
-    summary:
-      'Businesses across India are investing in digital platforms, online payments, automation, and cloud services to improve their operations.',
-    source: 'Nuzio Brief',
-  },
-  {
-    id: 4,
-    category: 'Financial Markets',
-    title: 'Markets remain focused on inflation and interest rates',
-    summary:
-      'Investors are closely watching inflation data, interest-rate decisions, and global economic signals while evaluating market opportunities.',
-    source: 'Nuzio Brief',
-  },
-  {
-    id: 5,
-    category: 'Health & Medicine',
-    title: 'Digital healthcare services continue to grow',
-    summary:
-      'Healthcare providers are increasingly using telemedicine, digital records, and technology-assisted services to improve patient access.',
-    source: 'Nuzio Brief',
-  },
-  {
-    id: 6,
-    category: 'Global Politics',
-    title: 'Global leaders focus on trade and technology policy',
-    summary:
-      'Governments are discussing trade, technology regulation, supply chains, and economic cooperation as global competition continues.',
-    source: 'Nuzio Brief',
-  },
-]
 
 function News() {
   const {
@@ -61,19 +11,33 @@ function News() {
     briefLength,
   } = useOnboarding()
 
+  const [stories, setStories] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
-
-  const personalizedStories = newsStories.filter((story) =>
-    interests.includes(story.category)
-  )
-
-  const stories =
-    personalizedStories.length > 0
-      ? personalizedStories
-      : newsStories
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
   const currentStory = stories[currentIndex]
+
+  useEffect(() => {
+    const loadNews = async () => {
+      try {
+        setLoading(true)
+
+        const response = await getPersonalizedNews(interests)
+
+        setStories(response.data.stories)
+        setCurrentIndex(0)
+      } catch (error) {
+        console.error(error)
+        setError('Unable to load your personalized brief.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadNews()
+  }, [interests])
 
   useEffect(() => {
     window.speechSynthesis.cancel()
@@ -89,9 +53,11 @@ function News() {
       return
     }
 
-    const textToSpeak = `${currentStory.title}. ${currentStory.summary}`
+    const textToSpeak =
+      `${currentStory.title}. ${currentStory.summary}`
 
-    const speech = new SpeechSynthesisUtterance(textToSpeak)
+    const speech =
+      new SpeechSynthesisUtterance(textToSpeak)
 
     if (voice === 'aria') {
       speech.lang = 'en-GB'
@@ -111,11 +77,17 @@ function News() {
       setIsPlaying(false)
     }
 
+    speech.onerror = () => {
+      setIsPlaying(false)
+    }
+
     window.speechSynthesis.speak(speech)
     setIsPlaying(true)
   }
 
   const nextStory = () => {
+    if (stories.length === 0) return
+
     setCurrentIndex((prev) => {
       if (prev === stories.length - 1) {
         return 0
@@ -126,6 +98,8 @@ function News() {
   }
 
   const previousStory = () => {
+    if (stories.length === 0) return
+
     setCurrentIndex((prev) => {
       if (prev === 0) {
         return stories.length - 1
@@ -135,19 +109,39 @@ function News() {
     })
   }
 
+  if (loading) {
+    return (
+      <section className="news-page">
+        <p>Preparing your personalized brief...</p>
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section className="news-page">
+        <p>{error}</p>
+      </section>
+    )
+  }
+
   if (!currentStory) {
-    return null
+    return (
+      <section className="news-page">
+        <p>No stories available.</p>
+      </section>
+    )
   }
 
   return (
     <section className="news-page">
       <div className="news-header">
         <div>
-          <p className="news-brand">▥ Nuzio AI</p>
+          <p className="news-brand">
+            ▥ Nuzio AI
+          </p>
 
-          <h1>
-            Good morning.
-          </h1>
+          <h1>Good morning.</h1>
 
           <p className="news-intro">
             Your {briefLength} minute brief is ready.
