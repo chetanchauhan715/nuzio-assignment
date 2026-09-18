@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useOnboarding } from '../context/OnboardingContext'
 import './Profession.css'
 
 const professions = [
@@ -15,7 +16,12 @@ const professions = [
 ]
 
 function Profession() {
-  const [selectedProfession, setSelectedProfession] = useState('Technology')
+  const navigate = useNavigate()
+
+  const {
+    profession,
+    setProfession,
+  } = useOnboarding()
 
   return (
     <section className="profession-page">
@@ -43,18 +49,21 @@ function Profession() {
         </p>
 
         <div className="profession-grid">
-          {professions.map((profession) => {
-            const isSelected = selectedProfession === profession
+          {professions.map((item) => {
+            const isSelected = profession === item
 
             return (
               <button
-                key={profession}
+                key={item}
                 type="button"
                 className={`profession-chip ${isSelected ? 'selected' : ''}`}
-                onClick={() => setSelectedProfession(profession)}
+                onClick={() => setProfession(item)}
               >
-                <span>{profession}</span>
-                {isSelected && <span className="check">✓</span>}
+                <span>{item}</span>
+
+                {isSelected && (
+                  <span className="check">✓</span>
+                )}
               </button>
             )
           })}
@@ -63,8 +72,8 @@ function Profession() {
 
       <button
         className="continue-btn"
-        disabled={!selectedProfession}
-        onClick={() => console.log(selectedProfession)}
+        disabled={!profession}
+        onClick={() => navigate('/interests')}
       >
         Continue →
       </button>
