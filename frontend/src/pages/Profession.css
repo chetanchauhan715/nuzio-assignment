@@ -1,0 +1,130 @@
+.profession-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 26px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at 50% 28%, rgba(91, 63, 255, 0.08), transparent 30%),
+    #0b0b0d;
+  color: white;
+}
+
+.profession-brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: #a78bfa;
+  font-weight: 600;
+}
+
+.progress-row {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.progress-row span {
+  height: 2px;
+  border-radius: 999px;
+  background: #2a2a2f;
+}
+
+.progress-row .progress-active {
+  background: linear-gradient(90deg, #8b5cf6, #22d3ee);
+}
+
+.profession-content {
+  margin-top: 34px;
+}
+
+.step-label {
+  margin: 0 0 8px;
+  font-size: 9px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: #6d5dfc;
+}
+
+.profession-content h1 {
+  margin: 0;
+  font-size: 31px;
+  line-height: 1.05;
+  max-width: 300px;
+}
+
+.profession-content h1 span {
+  display: block;
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  color: #8b5cf6;
+}
+
+.profession-subtitle {
+  margin: 10px 0 22px;
+  color: #8d8d94;
+  font-size: 12px;
+  line-height: 1.5;
+  max-width: 300px;
+}
+
+.profession-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.profession-chip {
+  min-height: 42px;
+  padding: 10px 12px;
+  border: 1px solid #2c2c31;
+  border-radius: 999px;
+  background: #171719;
+  color: #d2d2d6;
+  font-size: 11px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  transition: 0.2s ease;
+}
+
+.profession-chip:hover {
+  border-color: #51458d;
+  background: #1d1d22;
+}
+
+.profession-chip.selected {
+  border-color: #7257ff;
+  background: rgba(114, 87, 255, 0.16);
+  color: #ffffff;
+}
+
+.check {
+  color: #4ade80;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.continue-btn {
+  margin-top: auto;
+  width: 100%;
+  height: 52px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #8b5cf6, #6d5dfc);
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.continue-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
