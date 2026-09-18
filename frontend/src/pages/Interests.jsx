@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useOnboarding } from '../context/OnboardingContext'
 import './Interests.css'
 
 const interests = [
@@ -17,11 +18,12 @@ const interests = [
 ]
 
 function Interests() {
-  const [selectedInterests, setSelectedInterests] = useState([
-    'AI & Technology',
-    'Indian Business',
-    'Startups',
-  ])
+  const navigate = useNavigate()
+
+  const {
+    interests: selectedInterests,
+    setInterests: setSelectedInterests,
+  } = useOnboarding()
 
   const toggleInterest = (interest) => {
     setSelectedInterests((prev) => {
@@ -78,7 +80,10 @@ function Interests() {
                 onClick={() => toggleInterest(interest)}
               >
                 {interest}
-                {selected && <span>✓</span>}
+
+                {selected && (
+                  <span>✓</span>
+                )}
               </button>
             )
           })}
@@ -88,7 +93,7 @@ function Interests() {
       <button
         className="continue-btn"
         disabled={selectedInterests.length === 0}
-        onClick={() => console.log(selectedInterests)}
+        onClick={() => navigate('/voice')}
       >
         Continue →
       </button>
