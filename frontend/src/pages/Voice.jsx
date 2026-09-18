@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useOnboarding } from '../context/OnboardingContext'
 import './Voice.css'
 
 const voices = [
@@ -25,8 +26,14 @@ const voices = [
 const lengths = [5, 10, 15]
 
 function Voice() {
-  const [selectedVoice, setSelectedVoice] = useState('aria')
-  const [briefLength, setBriefLength] = useState(5)
+  const navigate = useNavigate()
+
+  const {
+    voice: selectedVoice,
+    setVoice: setSelectedVoice,
+    briefLength,
+    setBriefLength,
+  } = useOnboarding()
 
   return (
     <section className="voice-page">
@@ -71,6 +78,7 @@ function Voice() {
                 <div className="voice-info">
                   <div className="voice-name">
                     {voice.name}
+
                     <span>{voice.language}</span>
                   </div>
 
@@ -112,12 +120,7 @@ function Voice() {
 
       <button
         className="continue-btn"
-        onClick={() => {
-          console.log({
-            voice: selectedVoice,
-            briefLength,
-          })
-        }}
+        onClick={() => navigate('/news')}
       >
         Start my brief →
       </button>
